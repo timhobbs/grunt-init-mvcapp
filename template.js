@@ -2,7 +2,7 @@
  * grunt-init-gruntfile
  * https://gruntjs.com/
  *
- * Copyright (c) 2012 "Cowboy" Ben Alman, contributors
+ * Copyright (c) 2012 'Cowboy' Ben Alman, contributors
  * Licensed under the MIT license.
  */
 
@@ -41,7 +41,10 @@ exports.template = function(grunt, init, done) {
         'grunt-contrib-concat': '~0.4.0',
         'grunt-contrib-uglify': '~0.5.0',
         'grunt-contrib-copy': '~0.7.0',
-        'grunt-bower-task': '~0.4.0'
+        'grunt-bower-task': '~0.4.0',
+        'grunt-bower-install': '~1.6.0',
+        'bower': '~1.3.12',
+        'grunt-shell': '~1.1.2'
       };
 
       // Generate package.json file, used by npm and grunt.
