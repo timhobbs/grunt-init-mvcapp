@@ -1,6 +1,6 @@
 # grunt-init-mvcapp
 
-Create a basic Gruntfile with [grunt-init][].
+Create an ASP.NET MVC app Gruntfile with [grunt-init][].
 
 [grunt-init]: http://gruntjs.com/project-scaffolding
 
