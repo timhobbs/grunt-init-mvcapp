@@ -1,9 +1,5 @@
 /*
- * grunt-init-gruntfile
- * https://gruntjs.com/
- *
- * Copyright (c) 2012 'Cowboy' Ben Alman, contributors
- * Licensed under the MIT license.
+ * grunt-init-mvcapp
  */
 
 'use strict';
@@ -29,6 +25,12 @@ exports.template = function(grunt, init, done) {
   ], function(err, props) {
     props.package_json = /y/i.test(props.package_json);
     props.file_name = props.package_json ? '<%= pkg.name %>' : 'FILE_NAME';
+
+    // Files to copy (and process).
+    var files = init.filesToCopy(props);
+
+    // Actually copy (and process) files.
+    init.copyAndProcess(files, props);
 
     // If is package_json true, generate package.json
     if (props.package_json) {
