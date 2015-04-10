@@ -7,12 +7,12 @@ module.exports = function (grunt) {
         pkg: grunt.file.readJSON('package.json'),
         shell: {
             bowerinstall: {
-                command: function(libname){
+                command: function (libname) {
                     return 'bower install ' + libname + ' -S';
                 }
             },
             bowerupdate: {
-                command: function(libname){
+                command: function (libname) {
                     return 'bower update ' + libname;
                 }
             }
@@ -30,14 +30,23 @@ module.exports = function (grunt) {
                 }
             }
         },
+        clean: {
+            main: [
+                '<%= pkg.name %>/Content/app.min.css',
+                '<%= pkg.name %>/Content/vendor/*.css',
+                '<%= pkg.name %>/Scripts/*.js',
+                '<%= pkg.name %>/Scripts/build/*.js',
+                '<%= pkg.name %>/Scripts/vendor/*.js'
+            ]
+        },
         copy: {
             js: {
                 files: [
                     {
                         expand: true,
                         flatten: true,
-                        src: ['bower-lib/**/*.js', '!bower-lib/bootstrap/*.js', '!bower-lib/jquery/*.js'],
-                        dest: '<%= pkg.name %>/Scripts',
+                        src: ['bower-lib/**/*.js', '!bower-lib/bootstrap/*.js', '!bower-lib/jquery/*.js', '!bower-lib/angular/*.js'],
+                        dest: '<%= pkg.name %>/Scripts/vendor/',
                         filter: 'isFile'
                     }
                 ]
@@ -48,22 +57,42 @@ module.exports = function (grunt) {
                         expand: true,
                         flatten: true,
                         src: ['bower-lib/**/*.css', '!bower-lib/bootstrap/*.css'],
-                        dest: '<%= pkg.name %>/Content',
+                        dest: '<%= pkg.name %>/Content/vendor/',
+                        filter: 'isFile'
+                    }
+                ]
+            },
+            fonts: {
+                files: [
+                    {
+                        expand: true,
+                        flatten: true,
+                        src: ['bower-lib/**/*.eot', 'bower-lib/**/*.svg', 'bower-lib/**/*.ttf', 'bower-lib/**/*.woff'],
+                        dest: '<%= pkg.name %>/Content/vendor/',
                         filter: 'isFile'
                     }
                 ]
             }
         },
         concat: {
-            dist: {
-                src: ['<%= pkg.name %>/Scripts/app/**/*.js'],
+            app: {
+                src: ['<%= pkg.name %>/Scripts/app/app.js', '<%= pkg.name %>/Scripts/app/**/*.js'],
                 dest: '<%= pkg.name %>/Scripts/build/app.js'
+            },
+            vendor: {
+                src: ['<%= pkg.name %>/Scripts/vendor/**/*.js'],
+                dest: '<%= pkg.name %>/Scripts/build/vendor.js'
             }
+
         },
         uglify: {
-            dist: {
-                src: '<%= concat.dist.dest %>',
-                dest: '<%= pkg.name %>/Scripts/build/app.min.js'
+            app: {
+                src: '<%= concat.app.dest %>',
+                dest: '<%= pkg.name %>/Scripts/app.min.js'
+            },
+            vendor: {
+                src: '<%= concat.vendor.dest %>',
+                dest: '<%= pkg.name %>/Scripts/vendor.min.js'
             }
         },
         jshint: {
@@ -106,11 +135,11 @@ module.exports = function (grunt) {
         },
         watch: {
             gruntfile: {
-                files: '<%= jshint.gruntfile.src %>',
+                files: '<%= jshint.gruntfile.files.src %>',
                 tasks: ['jshint:gruntfile']
             },
             lib_test: {
-                files: '<%= jshint.lib_test.src %>',
+                files: '<%= jshint.lib_test.files.src %>',
                 tasks: ['jshint:lib_test', 'clean', 'copy', 'concat', 'uglify']
             }
         }
