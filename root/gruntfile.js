@@ -1,3 +1,4 @@
+/*global module:false*/
 module.exports = function (grunt) {
 
     require('load-grunt-tasks')(grunt);
@@ -69,11 +70,8 @@ module.exports = function (grunt) {
             options: {
                 curly: true,
                 eqeqeq: true,
-                immed: true,
-                latedef: true,
-                newcap: true,
+                latedef: "nofunc",
                 noarg: true,
-                sub: true,
                 undef: true,
                 unused: true,
                 boss: true,
@@ -82,14 +80,29 @@ module.exports = function (grunt) {
                 globals: {}
             },
             gruntfile: {
-                src: 'Gruntfile.js'
+                options: {
+                    globals: {
+                        "require": true
+                    }
+                },
+                files: {
+                    src: ['Gruntfile.js']
+                }
             },
             lib_test: {
-                src: ['<%= pkg.name %>/Scripts/**/*.js']
+                options: {
+                    globals: {
+                        "angular": true,
+                        "console": true
+                    }
+                },
+                files: {
+                    src: ['<%= pkg.name %>/Scripts/app/**/*.js']
+                }
             }
         },
         qunit: {
-            files: ['<%= pkg.name %>/**/*.html']
+            files: ['<%= pkg.name %>/index.html', '<%= pkg.name %>/pages/**/*.html']
         },
         watch: {
             gruntfile: {
@@ -98,12 +111,12 @@ module.exports = function (grunt) {
             },
             lib_test: {
                 files: '<%= jshint.lib_test.src %>',
-                tasks: ['jshint:lib_test', 'qunit']
+                tasks: ['jshint:lib_test', 'clean', 'copy', 'concat', 'uglify']
             }
         }
     });
 
-    grunt.registerTask('default', ['jshint', 'qunit', 'concat', 'uglify']);
+    grunt.registerTask('default', ['bower', 'jshint', 'clean', 'copy', 'concat', 'uglify']);
     grunt.registerTask('binst', function (library) {
         grunt.task.run('shell:bowerinstall:' + library);
         grunt.task.run('default');
